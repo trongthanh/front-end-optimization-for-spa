@@ -1,0 +1,23 @@
+{
+  "name": "front-end-spa-optimization",
+  "version": "1.0.0",
+  "description": "Front End Optimization for SPA",
+  "homepage": "https://int3ractive.com/front-end-spa-optimization",
+  "scripts": {
+    "start": "npx live-server"
+  },
+  "author": {
+    "name": "Thanh Tran",
+    "email": "trongthanh@gmail.com",
+    "web": "https://int3ractive.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/trongthanh/front-end-spa-optimization.git"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "devDependencies": {},
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,547 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Front End Optimization for SPA by Thanh Tran - int3ractive.com</title>
+		<meta name="description" content="Slides: Front End Optimization for SPA by Tran Trong Thanh">
+
+		<meta property="og:url"         content="https://int3ractive.com/front-end-optimization-for-spa" />
+		<meta property="og:type"        content="article" />
+		<meta property="og:title"       content="Front End Optimization for SPA by Thanh Tran - int3ractive.com" />
+		<meta property="og:description" content="Slides: Front End Optimization for SPA by Tran Trong Thanh" />
+		<meta property="og:image"       content="https://int3ractive.com/front-end-optimization-for-spa/cover.jpg" />
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/tomorrow.css">
+		<link href="https://fonts.googleapis.com/css?family=Muli:400,400i,700,700i&amp;subset=latin-ext,vietnamese" rel="stylesheet">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<header class="global-header">
+			<p><a href="https://int3ractive.com">int3ractive.com</a></p>
+		</header>
+		<div class="reveal">
+			<div class="slides">
+				<section class="title-slide" data-background="images/muhammad-mukhlis-501351-unsplash.jpg">
+					<h1>Front End Optimization<br>for SPA</h1>
+					<h2>Trần Trọng Thanh<br><a href="https://github.com/trongthanh">@trongthanh</a></h2>
+					<footer class="footnote">
+						<small><time datetime="2018-09-13T19:00:00+07:00" title="2018-09-13: Programmer Day">2018-256</time></small>
+					</footer>
+				</section>
+				<section>
+					<p>About me:</p>
+					<h2>Trần Trọng Thanh</h2>
+					<h4>Front End Specialist</h4>
+					<p>
+						CTO & Co-founder <a href="https://naustud.io">naustud.io</a><br>
+						Front End Architect <a href="https://goalify.plus">goalify.plus</a><br>
+					</p>
+					<p><small>
+							Contact me:<br>
+							Website: <a href="https://int3ractive.com">int3ractive.com</a><br>
+							Github, Twitter, Facebook: <a href="https://int3ractive.com">@trongthanh</a><br>
+					</small></p>
+				</section>
+				<section>
+					<p>Today's discussion:</p>
+					<p>How to make your web apps <strong>load fast</strong></p>
+				</section>
+				<section>
+					<img src="images/HD6N7-data-mobile-site-abandonment-three-second-load-download.jpg" alt="Mobile site users abandon after three seconds to load">
+					<footer class="footnote">
+						<small>Src: <a href="https://www.thinkwithgoogle.com/data/mobile-site-abandonment-three-second-load">thinkwithgoogle.com/data/mobile-site-abandonment-three-second-load</a></small>
+					</footer>
+				</section>
+				<section>
+					<blockquote cite="https://www.fastcompany.com/1825005/how-one-second-could-cost-amazon-16-billion-sales">
+						&ldquo;Amazon's calculated page load slowdown of just <strong>01 second</strong> could cost it <strong>$1.6 billion</strong> in sales each year&rdquo;
+					</blockquote>
+					<footer class="footnote">
+						<small>Src: <a href="https://www.fastcompany.com/1825005/how-one-second-could-cost-amazon-16-billion-sales">fastcompany.com/1825005/how-one-second-could-cost-amazon-16-billion-sales</a></small>
+					</footer>
+				</section>
+				<!-- <section>
+					<h3>Questions</h3>
+					<ul>
+						<li class="fragment">Is it responsibility of just Front End Web developers?</li>
+						<li class="fragment"></li>
+					</ul>
+				</section> -->
+				<section>
+					<h3>Common Advices</h3>
+					<ul>
+						<li class="fragment">Concatenate JS & CSS</li>
+						<li class="fragment">Minify static files</li>
+						<li class="fragment">Optimize image sizes</li>
+						<li class="fragment">Move &lt;script&gt; tag to bottom</li>
+						<li class="fragment">Turn on gzip</li>
+						<li class="fragment">...</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Let's try to answer:</h3>
+					<h2>Why?</h2>
+				</section>
+				<section>
+					<h3>What happen</h3>
+					<p>from entering URL on address bar to full rendered page</p>
+					<aside class="notes">
+
+					</aside>
+				</section>
+				<section>
+					<h2>HTTP Request</h2>
+					<h3>Anatomy</h3>
+				</section>
+				<section>
+					<p>devtool network timing</p>
+					<img src="images/devtools-network.png" alt="">
+					<div class="fragment highlight-rect" style="width: 900px; height: 20px; top: 70%; left: 2%"></div>
+					<aside class="notes">
+						Devtool network timing explaination: https://developers.google.com/web/tools/chrome-devtools/network-performance/reference#timing-explanation
+					</aside>
+				</section>
+				<section>
+					<p>DNS Lookup</p>
+					<img src="images/devtools-network-request-details-cropped.png" alt="">
+					<div class="fragment highlight-rect" style="width: 900px; height: 20px; top: 51.3%; left: 3%;"></div>
+				</section>
+				<section>
+					<p>Initial Connection</p>
+					<img src="images/devtools-network-request-details-cropped.png" alt="">
+					<div class="highlight-rect" style="width: 900px; height: 40px; top: 55.3%; left: 3%;"></div>
+				</section>
+				<section>
+					<p>Time to First Byte (TTFB)</p>
+					<img src="images/devtools-network-request-details-cropped.png" alt="">
+					<div class="highlight-rect" style="width: 900px; height: 20px; top: 71.4%; left: 3%;"></div>
+				</section>
+				<section>
+					<h3>Advices for Initial Connection & TTFB</h3>
+					<ul>
+						<li class="fragment">Reduce geographical latency with server location, CDN (devops)</li>
+						<li class="fragment">Cache server requests (nginx, REDIS...) (backend + devops)</li>
+						<li class="fragment">Reduce number of requests: concatenate, sprite sheet...</li>
+						<li class="fragment">OR use HTTP2 (multiplexing) (devops)</li>
+					</ul>
+				</section>
+				<section>
+					<p>Content Download</p>
+					<img src="images/devtools-network-request-details-cropped.png" alt="">
+					<div class="fragment highlight-rect" style="width: 900px; height: 20px; top: 75.2%; left: 3%;"></div>
+				</section>
+				<section>
+					<h3>Advices for Content Download</h3>
+					<ul>
+						<li class="fragment">Reduce static files size: minification</li>
+						<li class="fragment">Optimize images, even better, resize images for difference screen size</li>
+						<li class="fragment">Use gzip (backend + devops)</li>
+						<li class="fragment">Use browser cache (backend + devops)</li>
+						<li class="fragment">(2018) Use service-worker with cache API</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Critical Rendering Path</h2>
+				</section>
+				<section>
+						<pre><code class="hljs" data-trim>&lt;!doctype html&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;meta charset=&quot;utf-8&quot;&gt;
+		&lt;title&gt;Page title&lt;/title&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/global.min.css&quot;&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/page.min.css&quot;&gt;
+		&lt;script src=&quot;/js/vendor.min.js&quot;&gt;&lt;/script&gt;
+		&lt;script src=&quot;/js/main.min.js&quot;&gt;&lt;/script&gt;
+	&lt;/head&gt;
+
+	&lt;body&gt;
+		&lt;!-- HTML markups here --&gt;
+	&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+					<p class="fragment">
+						<img src="images/critical-rendering-path.png" alt="critical rendering path">
+					</p>
+					<footer class="footnote fragment">
+						<small>Image src: <a href="https://medium.com/@luisvieira_gmr/understanding-the-critical-rendering-path-rendering-pages-in-1-second-735c6e45b47a">medium.com/@luisvieira_gmr/understanding-the-critical-rendering-path...</a></small>
+					</footer>
+				</section>
+				<section>
+					<h3>Advices for Critical Rendering Path</h3>
+					<ul>
+						<li class="fragment">Inline critical (above the fold) CSS</li>
+						<li class="fragment">Simplify HTML tags, avoid unnecessary nesting</li>
+						<li class="fragment">Minify HTML to under 14kb (TCP packet limit)</li>
+						<li class="fragment">Delay loading of non-critical assets: JS, below the fold CSS, web fonts...</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Having done all of above will guarantee fast page render under 2 seconds.<br>
+					</h3>
+					<h2 class="fragment">Is it?</h2>
+				</section>
+				<section>
+					<h2>How about SPA?</h2>
+					<footer class="footnote">
+						<small>SPA: Single Page Application</small>
+					</footer>
+				</section>
+				<section>
+					<p>Typical SPA's downloaded HTML</p>
+					<pre><code class="hljs" data-trim>
+&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+	&lt;head&gt;
+		&lt;meta charset=&quot;utf-8&quot;&gt;
+		&lt;title&gt;Single Page Application&lt;/title&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;/app.min.css&quot;&gt;
+		&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/...&quot;&gt;
+	&lt;/head&gt;
+
+	&lt;body&gt;
+		&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+
+		&lt;script src=&quot;/bundle.min.js&quot;&gt;&lt;/script&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+					</code></pre>
+				</section>
+				<section>
+					<p>Common performance problems with SPA:</p>
+					<ul>
+						<li>Empty initial HTML</li>
+						<li>Large JS bundle size</li>
+						<li>Long JS parsing time</li>
+						<li>Critical rendering path doesn't apply for SPA</li>
+					</ul>
+				</section>
+				<section>
+					<p>User-centric performance metrics</p>
+					<img src="images/perf-metrics-load-timeline.png" alt="">
+					<p class="fragment">
+						<small>First Paint -> First Contentful Paint -> First Meaningful Paint -> Time to Interactive</small>
+						<br>
+						<span>FP -> FCP -> FMP -> TTI</span>
+					</p>
+					<footer class="footnote">
+						<small>Src: <a href="https://developers.google.com/web/fundamentals/performance/user-centric-performance-metrics">developers.google.com/web/fundamentals/performance/user-centric-performance-metrics</a></small>
+					</footer>
+				</section>
+				<section>
+					<p>SPA page speed optimization target:</p>
+					<h3>Reduce time to FMP<br>=</h3>
+					<p>Reduce JS bundle size</p>
+				</section>
+				<section>
+					<h3>SPA Optimization Rules of Thumb</h3>
+					<ul>
+						<li class="fragment">Minify and bundle JS on production</li>
+						<li class="fragment">Shared bundles (leverage browser cache)</li>
+						<li class="fragment">Code splitting (reduce load size for a "logical page")</li>
+						<li class="fragment">Tree shaking</li>
+						<li class="fragment">preload and prefetch</li>
+					</ul>
+				</section>
+				<section>
+					<p>What is common among Angular, React, Vue?</p>
+					<p>
+						<img class="no-border" src="images/angular-logo.svg" alt="Angular logo" height="80">
+						<img class="no-border" src="images/react-logo.png" alt="React logo" height="80">
+						<img class="no-border" src="images/vue-logo.png" alt="Vue logo" height="80">
+					</p>
+				</section>
+				<section>
+					<p><img src="images/webpack-cover.png" alt="Webpack flow cover"></p>
+					<p>Webpack</p>
+				</section>
+				<section>
+					<img src="images/react-vietnam-large-bundle-question.png" alt="" height="400">
+					<footer class="footnote">
+						<small>Src: React Vietnam Facebook Group</small>
+					</footer>
+				</section>
+				<section>
+					<h2>Minify JS on production</h2>
+					<h3>Use Webpack's UglifyJSPlugin</h3>
+				</section>
+				<section>
+					<pre><code class="hljs js" data-trim>
+if (PRODUCTION) {
+	config.plugins = config.plugins.concat([
+		new webpack.optimize.UglifyJsPlugin({
+			beautify: false,
+			mangle: {
+				screw_ie8: true,
+				keep_fnames: true,
+			},
+			compress: {
+				screw_ie8: true,
+				drop_debugger: true,
+				drop_console: true,
+			},
+			output: {
+				comments: false,
+			},
+			sourceMap: !PRODUCTION,
+		}),
+	]);
+}
+					</code></pre>
+				</section>
+				<section>
+					<h2>Shared Bundle:</h2>
+					<h3>Extract Style rules to CSS file</h3>
+				</section>
+				<section>
+					<pre><code class="hljs js" data-trim>
+rules: {
+	test: /\.s?css$/,
+	use: ExtractTextPlugin.extract({
+		fallback: 'style-loader',
+		use: [{
+				loader: 'css-loader',
+				options: {/*...*/},
+			}, {
+				loader: 'postcss-loader',
+				options: {/*...*/},
+			}, {
+				loader: 'sass-loader',
+				options: {/*...*/},
+			},
+		],
+	}),
+},
+					</code></pre>
+					<pre><code class="hljs js" data-trim>
+plugins: [
+	new ExtractTextPlugin('styles/styles-[chunkhash].css'),
+]
+					</code></pre>
+				</section>
+				<section>
+					<h2>Shared Bundle:</h2>
+					<h3>Extract common modules with DLLPlugin</h3>
+				</section>
+				<section>
+					<pre><code class="hljs js" data-trim>
+const config = {
+	entry: {
+		vendor: [
+			'classnames',
+			'dom-helpers',
+			'moment',
+			'react',
+			'react-dom',
+			'react-prop-types',
+			'react-router',
+			'jquery',
+			/*...*/
+		],
+	},
+	output: {
+		filename: 'vendor.js',
+		path: path.join(__dirname, buildPath),
+		library: '[name]',
+	},
+	plugins: [
+		new webpack.DllPlugin({
+			name: '[name]',
+			path: `${buildPath}vendor-manifest.json`,
+		}),
+	],
+}
+					</code></pre>
+				</section>
+				<section>
+					<h2>Code Splitting:</h2>
+					<h3>Split chunks based on route<br>Lazy load module with dynamic imports</h3>
+				</section>
+				<section>
+					<pre><code class="hljs js" data-trim>
+&lt;Route path=&quot;achievement&quot; getComponent={(nextState, cb) =&gt; {
+	showModuleLoading();
+
+	import(/* webpackChunkName: &quot;views/admin/achievement&quot; */ &#039;./views/admin/AdminCoreValuePage&#039; )
+		.then(PageComp =&gt; {
+			showModuleLoading.cancel();
+			AppActions.toggleLoading(false);
+			return cb(null, PageComp.default);
+		});
+}}
+/&gt;
+					</code></pre>
+					<p><small>Lazy loaded route component with dynamic import</small></p>
+				</section>
+
+				<section>
+					<h2>Tree Shaking</h2>
+				</section>
+
+				<section>
+					<h3>Webpack Bundle Analyzer</h3>
+					<pre><code class="hljs shell" data-trim>
+$ npm install --global webpack-bundle-analyzer
+
+$ webpack --profile --json > stats.json
+
+$ webpack-bundle-analyzer stats.json
+					</code></pre>
+				</section>
+				<section>
+					<img src="images/webpack-bundle-analyzer.png" alt="">
+				</section>
+				<section>
+					<h3>Common tree shaking-ready techniques</h3>
+					<ul>
+						<li>Prefer multiple exports than single object export</li>
+					</ul>
+					<pre><code class="hljs js" data-trim>
+// utils.js
+// instead of this:
+export default const utils = {
+	trim() {/*...*/},
+	format() {/*...*/},
+}
+
+// do this:
+export function trim() {/*...*/};
+export function format() {/*...*/};
+					</code></pre>
+				</section>
+				<section>
+					<h3>Common tree shaking-ready techniques</h3>
+					<ul>
+						<li>Import only what needed, especially from multi-part libraries</li>
+					</ul>
+					<pre><code class="hljs js" data-trim>
+// Ends up pulling in everything.
+import { truncate } from 'lodash';
+
+// Just pull in the module we're interested in.
+import truncate from 'lodash-es/truncate';
+					</code></pre>
+				</section>
+				<section>
+					<h3>Common tree shaking-ready techniques</h3>
+					<ul>
+						<li>Use Webpack IgnorePlugin (for example Moment)
+							<pre><code class="hljs js" data-trim>
+plugins: [
+	new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+]
+							</code></pre>
+						</li>
+						<li class="fragment">Or use <em>tree-shakeable</em> alternative: <code>date-fns</code>
+							<pre><code class="hljs js" data-trim>
+import {format, parse} from 'date-fns/esm';
+							</code></pre>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<h2>preload and prefetch</h2>
+				</section>
+				<section>
+					<pre><code class="hljs html" data-trim>
+&lt;link rel=&quot;preload&quot; href=&quot;/page/index.js&quot; as=&quot;script&quot;/&gt;
+&lt;link rel=&quot;preload&quot; href=&quot;/page/_error.js&quot; as=&quot;script&quot;/&gt;
+&lt;link rel=&quot;preload&quot; href=&quot;/app.js&quot; as=&quot;script&quot;/&gt;
+					</code></pre>
+					<p><small>Preload common chunks and next page JS bundle for faster transition to next page</small></p>
+				</section>
+				<section>
+					<h3>Wow, that's a lot!</h3>
+					<h2 class="fragment">But, there's more!</h2>
+					<p class="fragment">Can we make critical rendering path works for SPA?</p>
+				</section>
+				<section>
+					<h2>Yes!</h2>
+					<h3 class="fragment">With Universal JS Applications</h3>
+				</section>
+				<section>
+					<h3>What is Universal JS Applications</h3>
+					<ul>
+						<li>Used to be called Isomorphic JS Applications</li>
+						<li>There are portions of JS run on both client and server (hence universal / isomorphic)</li>
+						<li>Server-side rendered HTML</li>
+						<li>Server-enabled History Push State</li>
+					</ul>
+				</section>
+				<section data-background-color="#333">
+					<img src="images/redux-spa.png" alt="">
+					<p>Client only Redux architecture</p>
+				</section>
+				<section data-background-color="#333">
+					<img src="images/redux-universal.png" alt="">
+					<p>Universal Redux architecture</p>
+				</section>
+				<section>
+					<p>
+						That's all folks!<br>
+						How do we audit our optimization effort?
+					</p>
+				</section>
+				<section>
+					<h2>Audit with LightHouse</h2>
+				</section>
+				<section>
+					<h2>Benchmark on production with webpagetest.org</h2>
+				</section>
+				<!-- ENDING -->
+				<section>
+					<p>What we discussed was only part of<br>Front End Optimization</p>
+				</section>
+				<section>
+					<h3>The whole picture: The RAIL model</h3>
+					<img src="images/rail.png" >
+					<footer class="footnote">
+						<small>Src: <a href="https://developers.google.com/web/fundamentals/performance/rail">https://developers.google.com/web/fundamentals/performance/rail</a></small>
+					</footer>
+
+				</section>
+				<section>
+					<p>To be continued...</p>
+					<h3>Thank you!</h3>
+					<h4>Q&A</h4>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				transition: 'none',
+				controls: true,
+				controlsTutorial: true,
+				history: true,
+				slideNumber: true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+		<script type="text/javascript"></script>
+	</body>
+</html>
